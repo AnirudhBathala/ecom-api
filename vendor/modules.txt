@@ -17,6 +17,9 @@ github.com/go-playground/universal-translator
 # github.com/go-playground/validator/v10 v10.19.0
 ## explicit; go 1.18
 github.com/go-playground/validator/v10
+# github.com/golang-jwt/jwt/v5 v5.2.1
+## explicit; go 1.18
+github.com/golang-jwt/jwt/v5
 # github.com/golang-migrate/migrate/v4 v4.17.1
 ## explicit; go 1.18
 github.com/golang-migrate/migrate/v4

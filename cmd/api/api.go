@@ -4,7 +4,6 @@ import (
 	"log"
 	"net/http"
 
-	"github.com/AnirudhBathala/ecom-api/config"
 	"github.com/AnirudhBathala/ecom-api/db"
 	"github.com/AnirudhBathala/ecom-api/services/user"
 	"github.com/go-chi/chi/v5"
@@ -13,7 +12,6 @@ import (
 type APIServer struct {
 	addr string
 	pg   *db.Postgres
-	config config.Config
 }
 
 func (s *APIServer) Run() error {
@@ -34,10 +32,9 @@ func (s *APIServer) Run() error {
 	return http.ListenAndServe(s.addr, router)
 }
 
-func NewAPIServer(addr string, db *db.Postgres,config config.Config) *APIServer {
+func NewAPIServer(addr string, db *db.Postgres) *APIServer {
 	return &APIServer{
 		addr: addr,
 		pg:   db,
-		config: config,
 	}
 }

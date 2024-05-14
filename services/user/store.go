@@ -29,6 +29,7 @@ func ScanRowIntoUser(rows pgx.Rows) (*models.User,error){
 		&user.Email,
 		&user.Password,
 		&user.CreatedAt,
+		&user.UpdatedAt,
 	)
 
 	if err!=nil {
@@ -57,7 +58,6 @@ func (s *Store) GetUserByEmail(email string) (*models.User,error){
 	if u.ID==0 {
 		return nil,fmt.Errorf("user not found")
 	}
-
 	return u,nil
 }
 

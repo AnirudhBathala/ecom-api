@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"net/http"
 
+	"github.com/AnirudhBathala/ecom-api/config"
 	"github.com/AnirudhBathala/ecom-api/models"
 	"github.com/AnirudhBathala/ecom-api/services/auth"
 	"github.com/AnirudhBathala/ecom-api/utils"
@@ -21,7 +22,42 @@ func (h *Handler) RigesterRoutes(router chi.Router) {
 }
 
 func (h *Handler) handleLogin(w http.ResponseWriter, r *http.Request) {
-	w.Write([]byte("Hello to Login"))
+	// check if body contains data
+	var userPayload models.LoginUserPayload
+
+	if err:=utils.ParseJSON(r,&userPayload); err!=nil {
+		utils.WriteError(w,http.StatusBadRequest,fmt.Errorf("error while parsing json: %v",err.Error()))
+		return
+	}
+
+	// validate the payload
+	if err:=utils.Validate.Struct(userPayload); err!=nil{
+		errors:=err.(validator.ValidationErrors)
+		utils.WriteError(w,http.StatusBadRequest,fmt.Errorf("invalid credentials: %v",errors))
+		return
+	}
+
+	// get user details
+	user,err:= h.Store.GetUserByEmail(userPayload.Email)
+	if err!=nil {
+		utils.WriteError(w,http.StatusBadRequest,fmt.Errorf("invalid credentials: %v",err))
+		return
+	}
+
+	// unhash password to compare 
+	if !auth.ComparePasswords(user.Password,userPayload.Password) {
+		utils.WriteError(w,http.StatusBadRequest,fmt.Errorf("invalid email or password: %v",err))
+		return
+	}
+
+	secret:=[]byte(config.Configs.JWTSecret)
+	token,err:= auth.CreateJWT(secret,user.ID)
+	if err != nil {
+		utils.WriteError(w, http.StatusInternalServerError, err)
+		return
+	}
+	
+	utils.WriteJSON(w,http.StatusOK,map[string]string{"token":token})
 }
 
 func (h *Handler) handleRegister(w http.ResponseWriter, r *http.Request) {
@@ -44,7 +80,7 @@ func (h *Handler) handleRegister(w http.ResponseWriter, r *http.Request) {
 
 	//check if the user exist
 	_,err:=h.Store.GetUserByEmail(user.Email)
-	if err!=nil {
+	if err==nil {
 		utils.WriteError(w,http.StatusBadRequest,fmt.Errorf("user already exists with this email: %s",user.Email))
 		return 
 	}

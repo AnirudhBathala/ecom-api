@@ -10,15 +10,14 @@ import (
 
 func main() {
 	
-	config:=config.InitConfig()
 
-	db, err := db.NewPostgresStorage(config.Database_URI)
+	db, err := db.NewPostgresStorage(config.Configs.Database_URI)
 	if err!=nil {
 		log.Fatal(err)
 	}
 	defer db.Close()
 
-	server := api.NewAPIServer(":8080", db,config)
+	server := api.NewAPIServer(":8080",db)
 	if err := server.Run(); err != nil {
 		log.Fatal(err)
 	}

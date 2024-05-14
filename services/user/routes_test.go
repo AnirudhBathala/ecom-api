@@ -7,7 +7,7 @@ import (
 	// "net/http/httptest"
 	"testing"
 
-	"github.com/AnirudhBathala/ecom-api/models"
+	// "github.com/AnirudhBathala/ecom-api/models"
 	// "github.com/go-chi/chi/v5"
 )
 
@@ -38,16 +38,16 @@ func TestUserServiceHandlers(t *testing.T) {
 	// })
 }
 
-type mockUserStore struct{}
+// type mockUserStore struct{}
 
-func (m *mockUserStore) GetUserByEmail(email string) (*models.User,error){
-	return nil,nil
-}
+// func (m *mockUserStore) GetUserByEmail(email string) (*models.User,error){
+// 	return nil,nil
+// }
 
-func (m *mockUserStore) GetUserByID(id int) (*models.User,error){
-	return nil,nil
-}
+// func (m *mockUserStore) GetUserByID(id int) (*models.User,error){
+// 	return nil,nil
+// }
 
-func (m *mockUserStore) CreateUser(user models.User) error{
-	return nil
-}
+// func (m *mockUserStore) CreateUser(user models.User) error{
+// 	return nil
+// }

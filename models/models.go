@@ -16,11 +16,17 @@ type User struct {
 	Email     string `json:"email"`
 	Password  string `json:"password"`
 	CreatedAt time.Time `json:"createdAt"`
+	UpdatedAt time.Time `json:"updatedAt"`
 }
 
 type RegisterUserPayload struct {
 	FirstName string `json:"firstname" validate:"required"`
 	LastName  string `json:"lastname" validate:"required"`
+	Email     string `json:"email" validate:"required,email"`
+	Password  string `json:"password" validate:"required,min=3,max=30"`
+}
+
+type LoginUserPayload struct {
 	Email     string `json:"email" validate:"required,email"`
 	Password  string `json:"password" validate:"required,min=3,max=30"`
 }
