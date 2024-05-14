@@ -5,14 +5,14 @@ import (
 	"net/http"
 
 	"github.com/AnirudhBathala/ecom-api/config"
+	"github.com/AnirudhBathala/ecom-api/db"
 	"github.com/AnirudhBathala/ecom-api/services/user"
 	"github.com/go-chi/chi/v5"
-	"github.com/jackc/pgx/v5"
 )
 
 type APIServer struct {
 	addr string
-	db   *pgx.Conn
+	pg   *db.Postgres
 	config config.Config
 }
 
@@ -24,7 +24,7 @@ func (s *APIServer) Run() error {
 	})
 
 	router.Route("/api/v1/",func(r chi.Router) {
-		userStore:=user.NewStore(s.db)
+		userStore:=user.NewStore(s.pg)
 		userHandler:=user.NewHandler(userStore)
 		userHandler.RigesterRoutes(r)
 	})
@@ -34,10 +34,10 @@ func (s *APIServer) Run() error {
 	return http.ListenAndServe(s.addr, router)
 }
 
-func NewAPIServer(addr string, db *pgx.Conn,config config.Config) *APIServer {
+func NewAPIServer(addr string, db *db.Postgres,config config.Config) *APIServer {
 	return &APIServer{
 		addr: addr,
-		db:   db,
+		pg:   db,
 		config: config,
 	}
 }

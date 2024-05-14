@@ -3,6 +3,7 @@ package utils
 import (
 	"encoding/json"
 	"fmt"
+	"io"
 	"net/http"
 
 	"github.com/go-playground/validator/v10"
@@ -12,11 +13,16 @@ var Validate = validator.New()
 
 func ParseJSON(r *http.Request,payload any) error {
 	// check if payload is present in request
-	if r.Body == nil {
-		return fmt.Errorf("missing request body")
+	body,err:=io.ReadAll(r.Body)
+	if err != nil {
+		return fmt.Errorf("unable to read request body")
 	}
 
-	return json.NewDecoder(r.Body).Decode(payload)
+	if len(body) == 0 {
+		return fmt.Errorf("missing request body")
+	}
+	
+	return json.Unmarshal(body,payload)
 }
 
 

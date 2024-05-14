@@ -1,7 +1,6 @@
 package main
 
 import (
-	"context"
 	"log"
 
 	"github.com/AnirudhBathala/ecom-api/cmd/api"
@@ -17,7 +16,7 @@ func main() {
 	if err!=nil {
 		log.Fatal(err)
 	}
-	defer db.Close(context.Background())
+	defer db.Close()
 
 	server := api.NewAPIServer(":8080", db,config)
 	if err := server.Run(); err != nil {

@@ -28,8 +28,9 @@ func (h *Handler) handleRegister(w http.ResponseWriter, r *http.Request) {
 	// check for the payload in request
 	var user models.RegisterUserPayload
 
-	if err:=utils.ParseJSON(r,user); err!=nil {
-		utils.WriteError(w,http.StatusBadRequest,err)
+	if err:=utils.ParseJSON(r,&user); err!=nil {
+		utils.WriteError(w,http.StatusBadRequest,fmt.Errorf("error while parsing json: %v",err.Error()))
+		return
 	}
 
 
@@ -66,8 +67,7 @@ func (h *Handler) handleRegister(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	utils.WriteJSON(w,http.StatusCreated,nil)
-
+	utils.WriteJSON(w,http.StatusCreated,"user created sucessfully")
 }
 
 func NewHandler(store models.UserStore) *Handler {
